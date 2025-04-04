@@ -12,11 +12,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
         if (Input.GetKey(KeyCode.RightArrow))
         {
             rb.linearVelocityX = 5;
         }
         rb.linearVelocityX = 0;
+
     }
 }
