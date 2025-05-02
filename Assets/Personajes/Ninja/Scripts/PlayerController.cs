@@ -2,13 +2,22 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject kunaiPrefab;
+    public int kunaisDisponibles = 5;
+
+
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator animator;
 
+    private string direccion = "Derecha";
     private bool puedeMoverseVerticalMente = false;
     private float defaultGravityScale = 1f;
     private bool puedeSaltar = true;
+    private bool puedeLanzarKunai = true;
+
+    
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,6 +37,7 @@ public class PlayerController : MonoBehaviour
         SetupMoverseHorizontal();
         SetupMoverseVertical();
         SetupSalto();
+        SetUpLanzarKunai();
     }
 
 
@@ -67,12 +77,14 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocityX = 10;
             sr.flipX = false;
+            direccion = "Derecha";
             animator.SetInteger("Estado", 1);
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             rb.linearVelocityX = -10;
             sr.flipX = true;
+            direccion = "Izquierda";
             animator.SetInteger("Estado", 1);
         }
     }
@@ -97,6 +109,16 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Space))
         {
             rb.linearVelocityY = 12.5f;
+        }
+    }
+
+    void SetUpLanzarKunai() {
+        if (!puedeLanzarKunai || kunaisDisponibles <= 0) return;
+        if (Input.GetKeyUp(KeyCode.K))
+        {
+            GameObject kunai = Instantiate(kunaiPrefab, transform.position, Quaternion.Euler(0, 0, -90));
+            kunai.GetComponent<KunaiController>().SetDirection(direccion);
+            kunaisDisponibles -= 1;
         }
     }
 }
