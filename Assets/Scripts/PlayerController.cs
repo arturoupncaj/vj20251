@@ -3,6 +3,10 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public AudioClip disparoClip;
+    public AudioClip saltoClip;
+
+
     public float velocidad = 10f;
     public float fuerzaSalto = 12.5f;
     
@@ -11,6 +15,7 @@ public class PlayerController : MonoBehaviour
 
     public Transform groundCheck;
     public LayerMask groundLayer;
+    public AudioSource audioSource;
 
 
     Rigidbody2D rb;
@@ -50,12 +55,11 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
-        enemigosMuertosText = GameObject.Find("EnemigoMuertosText").GetComponent<Text>();
 
         defaultGravityScale = rb.gravityScale;
 
-        enemigosMuertosText.text = "Nuevo TEXTO";
 
     }
 
@@ -99,7 +103,6 @@ public class PlayerController : MonoBehaviour
 
     void SetupMoverseHorizontal() {
         
-        Debug.Log($"isGrounded: {isGrounded}, {rb.linearVelocityY}");
         if (isGrounded && rb.linearVelocityY == 0) {
             animator.SetInteger("Estado", 0);
         }
@@ -188,6 +191,8 @@ public class PlayerController : MonoBehaviour
             GameObject kunai = Instantiate(kunaiPrefab, transform.position, Quaternion.Euler(0, 0, -90));
             kunai.GetComponent<KunaiController>().SetDirection(direccion);
             kunaisDisponibles -= 1;
+            // ejecutar sonido
+            audioSource.PlayOneShot(disparoClip);
         }
     }
 

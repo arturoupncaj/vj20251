@@ -6,12 +6,16 @@ public class KunaiController: MonoBehaviour
 
     Rigidbody2D rb;
     SpriteRenderer sr;
+    GameRepository gameRepository;
+    GameData gameData;
 
     void Start()
     {
         // Initialize the Kunai object
+        gameRepository = GameRepository.GetInstance();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        gameData = gameRepository.GetData();
 
         Destroy(this.gameObject, 5f);
     }
@@ -40,6 +44,9 @@ public class KunaiController: MonoBehaviour
         {
             Destroy(collision.gameObject);
             Destroy(this.gameObject);
+
+            gameData.enemigosMuertos++;
+            gameRepository.SaveData();
         }
     }
 
