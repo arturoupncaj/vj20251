@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     public float velocidad = 10f;
     public float fuerzaSalto = 12.5f;
-    
+
     public GameObject kunaiPrefab;
     public int kunaisDisponibles = 5;
 
@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour
         SetupMoverseVertical();
         SetupSalto();
         SetUpLanzarKunai();
+        SetUpDeslizar();
     }
 
 
@@ -86,7 +87,8 @@ public class PlayerController : MonoBehaviour
     void OnTriggerStay2D(Collider2D other)
     {
         Debug.Log($"Trigger con: {other.gameObject.name}");
-        if (other.gameObject.name == "Muro") {
+        if (other.gameObject.name == "Muro")
+        {
             puedeMoverseVerticalMente = true;
         }
     }
@@ -94,16 +96,19 @@ public class PlayerController : MonoBehaviour
     void OnTriggerExit2D(Collider2D other)
     {
         Debug.Log($"Trigger con: {other.gameObject.name}");
-        if (other.gameObject.name == "Muro") {
+        if (other.gameObject.name == "Muro")
+        {
             puedeMoverseVerticalMente = false;
             rb.gravityScale = defaultGravityScale;
         }
     }
 
 
-    void SetupMoverseHorizontal() {
-        
-        if (isGrounded && rb.linearVelocityY == 0) {
+    void SetupMoverseHorizontal()
+    {
+
+        if (isGrounded && rb.linearVelocityY == 0)
+        {
             animator.SetInteger("Estado", 0);
         }
 
@@ -126,8 +131,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void SetupMoverseVertical() {
-        
+    void SetupMoverseVertical()
+    {
+
         if (!puedeMoverseVerticalMente) return;
         rb.gravityScale = 0;
         rb.linearVelocityY = 0;
@@ -141,25 +147,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void SetupSalto() {
+    void SetupSalto()
+    {
         bool isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
 
         // --- Coyote Time ---
-        if (isGrounded) {
+        if (isGrounded)
+        {
             coyoteTimeCounter = coyoteTime;
         }
-        else {
+        else
+        {
             coyoteTimeCounter -= Time.deltaTime;
             if (rb.linearVelocityY > 5f)
                 animator.SetInteger("Estado", 3);
-            
+
         }
 
-        
+
 
 
         // --- Jump Buffer ---
-        if (Input.GetButtonDown("Jump")) {
+        if (Input.GetButtonDown("Jump"))
+        {
             jumpBufferCounter = jumpBufferTime;
         }
         else
@@ -180,11 +190,12 @@ public class PlayerController : MonoBehaviour
         else if (rb.linearVelocityY > 0 && !Input.GetButton("Jump"))
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1f) * Time.deltaTime;
-            
+
         }
     }
 
-    void SetUpLanzarKunai() {
+    void SetUpLanzarKunai()
+    {
         if (!puedeLanzarKunai || kunaisDisponibles <= 0) return;
         if (Input.GetKeyUp(KeyCode.K))
         {
@@ -203,6 +214,14 @@ public class PlayerController : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, 0.1f);
+        }
+    }
+
+    void SetUpDeslizar()
+    {
+        if (Input.GetKey(KeyCode.G))
+        {
+            animator.SetInteger("Estado", 4);
         }
     }
 }
